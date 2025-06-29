@@ -103,7 +103,7 @@ function loadBeepSounds() {
       const t = i / audioContext.sampleRate;
       const wave = Math.sign(Math.sin(t * 2 * Math.PI * freq));
       const envelope = Math.min(1, t * 100) * Math.min(1, (duration - t) * 100);
-      data[i] = wave * envelope * 1;
+      data[i] = wave * envelope * 0.08;
     }
 
     beepSounds.push(buffer);
