@@ -101,7 +101,7 @@ function loadBeepSounds() {
       const wave = Math.sign(Math.sin(t * 2 * Math.PI * freq));
       const envelope =
         Math.min(1, t * 100) * Math.min(1, ((duration - t) * 100) / duration);
-      data[i] = wave * envelope * 0.07; // adjust volume
+      data[i] = wave * envelope * 0.07;
     }
 
     beepSounds.push(buffer);
