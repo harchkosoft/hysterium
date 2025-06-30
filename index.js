@@ -24,7 +24,6 @@ let audioContext,
 let lastBeepTime = 0;
 let beepInterval = 1600;
 
-
 window.onload = function () {
   canvas = document.getElementById("canvas");
   canvas.width = window.innerWidth;
@@ -86,10 +85,8 @@ function initAudio() {
 function loadBeepSounds() {
   beepSounds = [];
 
-  const frequencies = [
-    800, 1000, 1200, 1600, 2000, 2500, 3000, 3500, 4000, 4500, 5000,
-  ];
-  const duration = 0.3;
+  const frequencies = [750];
+  const duration = 0.45;
 
   frequencies.forEach((freq) => {
     const buffer = audioContext.createBuffer(
@@ -99,11 +96,12 @@ function loadBeepSounds() {
     );
     const data = buffer.getChannelData(0);
 
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i += 1) {
       const t = i / audioContext.sampleRate;
       const wave = Math.sign(Math.sin(t * 2 * Math.PI * freq));
-      const envelope = Math.min(1, t * 100) * Math.min(1, (duration - t) * 100);
-      data[i] = wave * envelope * 0.07;
+      const envelope =
+        Math.min(1, t * 100) * Math.min(1, ((duration - t) * 100) / duration);
+      data[i] = wave * envelope * 0.07; // adjust volume
     }
 
     beepSounds.push(buffer);
@@ -118,7 +116,7 @@ function playBeepSound() {
 
   const filter = audioContext.createBiquadFilter();
   filter.type = "highpass";
-  filter.frequency.value = 1337;
+  filter.frequency.value = 1000 + Math.random() * 5 * intensity * 100;
 
   source.connect(filter);
   filter.connect(audioContext.destination);
@@ -234,7 +232,10 @@ function render() {
     ) {
       corruptText();
       lastTextCorruptionTime = currentTime;
-      textCorruptionInterval = Math.max(50, 500 - intensity * 450);
+      textCorruptionInterval = Math.max(
+        1000,
+        3000 - intensity * 500 + Math.random() * 100
+      );
     }
 
     if (currentTime - lastBeepTime > beepInterval / (1 + intensity * 5)) {
